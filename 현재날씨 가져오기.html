@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <title>실시간 날씨 정보 받아오기</title>
+</head>
+<body>
+    <div class="weather">
+
+    </div>
+
+    <script>
+        /* 
+        오늘 (2022.10.13) 만든 내 키임 dcbf147fffa77d5451ea6234e616b5ab
+        https://api.openweathermap.org/data/2.5/weather?lat=34.794&lon=126.389&appid=dcbf147fffa77d5451ea6234e616b5ab
+
+        날씨 키값(api key)  02a146d88b51a0a88235d8a46514d112
+        
+        도시 ID > id=1841066
+
+        날씨 예보
+        http://api.openweathermap.org/data/2.5/forecast?id=1841066&appid=02a146d88b51a0a88235d8a46514d112&units=metric
+
+        현재시간 날씨
+        http://api.openweathermap.org/data/2.5/weather?id=1841066&appid=02a146d88b51a0a88235d8a46514d112&units=metric
+
+        json 코드 이쁘게 변환   https://jsonbeautifier.org/
+
+        {
+            "dt":1630227600,          //현재시간
+            "main":{
+                "temp":27.03,         //현재온도
+                "feels_like":30.71,   //체감온도
+                "temp_min":25.54,     //최저온도   
+                "temp_max":27.03,     //최고온도
+                "pressure":1013,
+                "sea_level":1013,
+                "grnd_level":1012,
+                "humidity":89,
+                "temp_kf":1.49
+            },
+            "weather":[
+                {
+                    "id":804,                          
+                    "main":"Clouds",
+                    "description":"overcast clouds",
+                    "icon":"04d"                      //날씨 아이콘 이름. 04d.png  04d@2x.png
+                }
+            ],
+            "clouds":{
+                "all":95
+            },
+            "wind":{
+                "speed":2.66,
+                "deg":251,
+                "gust":3.38
+            },
+            "visibility":10000,
+            "pop":0.16,
+            "sys":{
+                "pod":"d"
+            },
+            "dt_txt":"2021-08-29 09:00:00"
+        }
+        */
+       
+        var weather = document.querySelector(".weather");
+
+        $.getJSON('http://api.openweathermap.org/data/2.5/weather?id=1841066&appid=02a146d88b51a0a88235d8a46514d112&units=metric',function(data){
+            var time =new Date(data.dt*1000);
+            weather.innerHTML += time + " ";
+            weather.innerHTML += data.name + " ";
+            weather.innerHTML += data.sys.country + " ";
+            weather.innerHTML += data.main.temp + "도 ";
+            weather.innerHTML += `<img src='http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png'>`;
+        });
+
+        
+
+    </script> 
+     
+</body>
+</html>

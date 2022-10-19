@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>오늘의 날씨</title>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script type="text/javascript" src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=bb9a19ab12ab00b80f8fbbbef995cc92"></script>
     <style>
         *{margin: 0; padding: 0;}
+        li{list-style: none;}
         body{
             height: 100vh;
             background: url("https://cdn.pixabay.com/photo/2022/04/09/19/34/hut-7122148_960_720.jpg");
@@ -21,6 +23,14 @@
             height: 100vh;
             background: rgba(0,0,0,.6);
             z-index: 1;
+        }
+        #map{
+            position: absolute;
+            top: 60%; left: 50%;
+            transform: translateX(-50%);
+            width: 240px; 
+            height: 240px;
+            border-radius: 20px;
         }
         .wBody{
             width: 428px;    /* 원래는 지정 안해줘도 됨. 모바일 안에 작은 라운드사각형 위치 조절 쉽게 하기위해 우선은 사이즈 잡아줌*/
@@ -86,6 +96,20 @@
             position: absolute;
             top: 60%;             
         }
+        .forecast{
+            position: absolute;
+            top: 52%; left: 50%;         
+            transform: translate(-50%,-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-evenly;
+        }
+        .forecast .f_time,.f_temp{
+            font-size: .8rem;
+            text-align: center;
+        }
+       
+
     </style>
 </head>
 <body>
@@ -98,11 +122,34 @@
                 <div class="main"></div>
                 <div class="temp"></div>
             </div>
-            
-            <div class="text">
+            <ul class="forecast">
+                <li>
+                    <div class="f_icon"></div>
+                    <div class="f_time"></div>
+                    <div class="f_temp"></div>
+                </li>
+                <li>
+                    <div class="f_icon"></div>
+                    <div class="f_time"></div>
+                    <div class="f_temp"></div>
+                </li>
+                <li>
+                    <div class="f_icon"></div>
+                    <div class="f_time"></div>
+                    <div class="f_temp"></div>
+                </li>
+                <li>
+                    <div class="f_icon"></div>
+                    <div class="f_time"></div>
+                    <div class="f_temp"></div>
+                </li>
+                
+            </ul>
+            <div id="map"></div>
+          <!--   <div class="text">
                 날씨가 맑아<br>
                 나들이 하기 좋은 날씨 입니다.
-            </div>
+            </div> -->
                
         </div>
     </div>
@@ -111,8 +158,41 @@
 
     
     <script>
+        //https://api.openweathermap.org/data/2.5/forecast/hourly?lat=34.7936&lon=126.3886&appid=dcbf147fffa77d5451ea6234e616b5ab
+        //4일 예보
+        //api.openweathermap.org/data/2.5/forecast?lat=34.7936&lon=126.3886&appid=dcbf147fffa77d5451ea6234e616b5ab&cnt=4  
+        //34.7936, 126.3886
+        //https://api.openweathermap.org/data/2.5/weather?lat=34.7936&lon=126.3886&appid=dcbf147fffa77d5451ea6234e616b5ab
         //$.getJSON("api경로", myapp);
         $.getJSON("https://api.openweathermap.org/data/2.5/weather?lat=34.794&lon=126.389&appid=dcbf147fffa77d5451ea6234e616b5ab&units=metric", myapp);
+
+        $.getJSON("https://api.openweathermap.org/data/2.5/forecast?lat=34.7936&lon=126.3886&appid=dcbf147fffa77d5451ea6234e616b5ab&units=metric", forecast);
+
+
+        function forecast(foreData){
+            
+            $(".forecast li:eq(0) .f_icon").html(`<img src='http://openweathermap.org/img/wn/${foreData.list[0].weather[0].icon}.png'>`);
+            $(".forecast li:eq(1) .f_icon").html(`<img src='http://openweathermap.org/img/wn/${foreData.list[8].weather[0].icon}.png'>`);
+            $(".forecast li:eq(2) .f_icon").html(`<img src='http://openweathermap.org/img/wn/${foreData.list[16].weather[0].icon}.png'>`);
+            $(".forecast li:eq(3) .f_icon").html(`<img src='http://openweathermap.org/img/wn/${foreData.list[24].weather[0].icon}.png'>`);
+
+            var foreTime1 = new Date(foreData.list[0].dt*1000);
+            var foreTime2 = new Date(foreData.list[8].dt*1000);
+            var foreTime3 = new Date(foreData.list[16].dt*1000);
+            var foreTime4 = new Date(foreData.list[24].dt*1000);
+            $(".forecast li:eq(0) .f_time").html(foreTime1.getDate()+"일 /" +foreTime1.getHours()+"시");
+            $(".forecast li:eq(1) .f_time").html(foreTime2.getDate()+"일 /" +foreTime2.getHours()+"시");
+            $(".forecast li:eq(2) .f_time").html(foreTime3.getDate()+"일 /" +foreTime3.getHours()+"시");
+            $(".forecast li:eq(3) .f_time").html(foreTime4.getDate()+"일 /" +foreTime4.getHours()+"시");
+
+
+
+            $(".forecast li:eq(0) .f_temp").html(`<span>${foreData.list[0].main.temp_min}℃</span>`);
+            $(".forecast li:eq(1) .f_temp").html(`<span>${foreData.list[0].main.temp_min}℃</span>`);
+            $(".forecast li:eq(2) .f_temp").html(`<span>${foreData.list[0].main.temp_min}℃</span>`);
+            $(".forecast li:eq(3) .f_temp").html(`<span>${foreData.list[0].main.temp_min}℃</span>`);
+
+        }
 
         function myapp(data){
             var todayWeather = data.name +" "+ data.weather[0].main  + " 온도 : " + data.main.temp + "℃"  +  `<img src='http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png'>`;   
@@ -128,7 +208,54 @@
             $(".main").html(data.weather[0].main);
             $(".temp").html(data.main.temp + " ℃");
         }
-       
+
+
+
+
+
+        var container = document.getElementById('map');
+        var text = document.querySelector('.text');
+
+		var options = {
+			center: new kakao.maps.LatLng(34.7936, 126.3886),
+			level: 10
+		};
+
+		var map = new kakao.maps.Map(container, options);
+
+        
+        // 지도를 클릭한 위치에 표출할 마커넣기 시작 -----
+        
+        var marker = new kakao.maps.Marker({ 
+            // 지도 중심좌표에 마커를 생성합니다 
+            position: map.getCenter() 
+        }); 
+        
+        // 지도에 마커를 표시합니다
+        marker.setMap(map);
+
+        // 지도를 클릭한 위치에 표출할 마커넣기 끝 -----
+
+        // 지도에 클릭 이벤트를 등록합니다
+        // 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
+        kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
+            
+            // 클릭한 위도, 경도 정보를 가져옵니다 
+            var latlng = mouseEvent.latLng; 
+            
+            // 마커 위치를 클릭한 위치로 옮깁니다
+            marker.setPosition(latlng);
+            
+            //text.innerHTML = "위도 : " + latlng.getLat() + "<br>경도 : " + latlng.getLng();
+            // 위도 : latlng.getLat()
+            // 경도 : latlng.getLng()
+            go(latlng.getLat(),latlng.getLng());
+        });
+
+        function go(Lat, Lng){
+            $.getJSON(`https://api.openweathermap.org/data/2.5/weather?lat=${Lat}&lon=${Lng}&appid=dcbf147fffa77d5451ea6234e616b5ab&units=metric`, myapp);       
+            $.getJSON(`https://api.openweathermap.org/data/2.5/forecast?lat=${Lat}&lon=${Lng}&appid=dcbf147fffa77d5451ea6234e616b5ab&units=metric`, forecast);
+        }
     </script>
 </body>
 </html>

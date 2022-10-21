@@ -109,6 +109,9 @@
             text-align: center;
             color: #fff;
         }
+        .air_pollution{
+            color: #fff;
+        }
        
 
     </style>
@@ -146,6 +149,14 @@
                 </li>
                 
             </ul>
+            <ul class="air_pollution">
+                <li>
+                    <div class="pm2_5"></div>
+                </li>
+                <li>
+                    <div class="pm10"></div> 
+                </li>
+            </ul>
             <div id="map"></div>
           <!--   <div class="text">
                 날씨가 맑아<br>
@@ -160,14 +171,26 @@
     
     <script>
         //https://api.openweathermap.org/data/2.5/forecast/hourly?lat=34.7936&lon=126.3886&appid=dcbf147fffa77d5451ea6234e616b5ab
+
+        //미세먼지
+        //https://api.openweathermap.org/data/2.5/air_pollution?lat=34.7936&lon=126.3886&appid=dcbf147fffa77d5451ea6234e616b5ab
+
+        
         //4일 예보
         //api.openweathermap.org/data/2.5/forecast?lat=34.7936&lon=126.3886&appid=dcbf147fffa77d5451ea6234e616b5ab&cnt=4  
         //34.7936, 126.3886
         //https://api.openweathermap.org/data/2.5/weather?lat=34.7936&lon=126.3886&appid=dcbf147fffa77d5451ea6234e616b5ab
+
         //$.getJSON("api경로", myapp);
+
         $.getJSON("https://api.openweathermap.org/data/2.5/weather?lat=34.794&lon=126.389&appid=dcbf147fffa77d5451ea6234e616b5ab&units=metric", myapp);
 
-        $.getJSON("https://api.openweathermap.org/data/2.5/forecast?lat=34.7936&lon=126.3886&appid=dcbf147fffa77d5451ea6234e616b5ab&units=metric", forecast);
+        $.getJSON("https://api.openweathermap.org/data/2.5/forecast?lat=34.7936&lon=126.3886&appid=dcbf147fffa77d5451ea6234e616b5ab&units=metric", forecast);  
+
+        $.getJSON("https://api.openweathermap.org/data/2.5/air_pollution?lat=34.7936&lon=126.3886&appid=dcbf147fffa77d5451ea6234e616b5ab&units=metric", air_pollution);   //내가 추가한거
+        
+        
+
 
 
         function forecast(foreData){
@@ -208,6 +231,14 @@
             $(".icon").html(`<img src='https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png'>`);
             $(".main").html(data.weather[0].main);
             $(".temp").html(data.main.temp + " ℃");
+        }
+
+
+        
+
+        function air_pollution(airData){  //내가추가한거
+            $(".pm2_5").html(airData.list[0].components.pm2_5);
+            $(".pm10").html(airData.list[0].components.pm10);
         }
 
 
@@ -256,6 +287,7 @@
         function go(Lat, Lng){
             $.getJSON(`https://api.openweathermap.org/data/2.5/weather?lat=${Lat}&lon=${Lng}&appid=dcbf147fffa77d5451ea6234e616b5ab&units=metric`, myapp);       
             $.getJSON(`https://api.openweathermap.org/data/2.5/forecast?lat=${Lat}&lon=${Lng}&appid=dcbf147fffa77d5451ea6234e616b5ab&units=metric`, forecast);
+            $.getJSON(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${Lat}&lon=${Lng}&appid=dcbf147fffa77d5451ea6234e616b5ab&units=metric`, air_pollution);//내가 추가한거
         }
     </script>
 </body>

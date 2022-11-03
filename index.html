@@ -187,7 +187,7 @@
 
         $.getJSON("https://api.openweathermap.org/data/2.5/forecast?lat=34.7936&lon=126.3886&appid=dcbf147fffa77d5451ea6234e616b5ab&units=metric", forecast);  
 
-        $.getJSON("https://api.openweathermap.org/data/2.5/air_pollution?lat=34.7936&lon=126.3886&appid=dcbf147fffa77d5451ea6234e616b5ab&units=metric", air_pollution);   //내가 추가한거
+      
         
         
 
@@ -236,13 +236,7 @@
 
         
 
-        /* function air_pollution(airData){  //내가추가한거
-            $(".pm2_5").html(airData.list[0].components.pm2_5);
-            $(".pm10").html(airData.list[0].components.pm10);
-        }
- */
-
-
+        
 
 
         var container = document.getElementById('map');
@@ -286,8 +280,7 @@
 
         function go(Lat, Lng){
             $.getJSON(`https://api.openweathermap.org/data/2.5/weather?lat=${Lat}&lon=${Lng}&appid=dcbf147fffa77d5451ea6234e616b5ab&units=metric`, myapp);       
-            $.getJSON(`https://api.openweathermap.org/data/2.5/forecast?lat=${Lat}&lon=${Lng}&appid=dcbf147fffa77d5451ea6234e616b5ab&units=metric`, forecast);
-            $.getJSON(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${Lat}&lon=${Lng}&appid=dcbf147fffa77d5451ea6234e616b5ab&units=metric`, air_pollution);//내가 추가한거
+            $.getJSON(`https://api.openweathermap.org/data/2.5/forecast?lat=${Lat}&lon=${Lng}&appid=dcbf147fffa77d5451ea6234e616b5ab&units=metric`, forecast);           
         }
     </script>
 </body>
